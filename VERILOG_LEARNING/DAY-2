@@ -1,0 +1,41 @@
+// ------------------------------switch_level_modeling.............................................//
+
+module inveter(
+  				input x,
+  output y );
+  
+  supply1 vdd;
+  supply0 gnd;
+  
+  pmos p1(y,vdd,x);
+  nmos n1(y,gnd,x);
+endmodule
+
+
+// ------------------------------switch_level_modeling.............................................//
+// ------------------------------inveter_testbench.............................................//
+module inveter_tb;
+
+reg x;
+wire y;
+
+inveter uut (
+    .x(x),
+    .y(y)
+);
+
+initial begin
+    $dumpfile("inveter.vcd");
+    $dumpvars(0, inveter_tb);
+
+    $monitor("Time=%0t | x=%b | y=%b", $time, x, y);
+
+    x = 0; 
+    x = 1; #10;
+    x = 0; #10;
+    x = 1; #10;
+
+    $finish;
+end
+
+endmodule
