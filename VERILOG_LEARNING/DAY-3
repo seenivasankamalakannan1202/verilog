@@ -1,0 +1,79 @@
+//////////////////////////////gate_level_modeling-full_adder////////////////////////////////////////
+module half_adder(input a, b,
+                  output sum, carry);
+  xor g1(sum, a, b);
+  and g2(carry, a, b);
+endmodule
+
+module full_adder(input a, b, c,
+                  output sum, carry);
+  
+  wire w1, w2, w3;  // w1=sum1, w2=carry1, w3=carry2
+  
+  // First half adder: adds a and b
+  half_adder HA1(
+    .a(a), 
+    .b(b),
+    .sum(w1),    // sum of a+b
+    .carry(w2)   // carry of a+b
+  );
+  
+  // Second half adder: adds sum1 with c
+  half_adder HA2(
+    .a(w1),      // sum from first HA
+    .b(c),       // input carry
+    .sum(sum),   // final sum
+    .carry(w3)   // carry from second HA
+  );
+  
+  // OR gate: combines the two carries
+  or g3(carry, w2, w3);
+  
+endmodule
+
+----------------------------------------------------------------------test_bench-----------------------------------------------------------------------
+
+
+  
+
+// Testbench
+module full_adder_tb();
+
+// Signals
+reg a, b, c;
+wire sum, carry;
+
+// Instantiate DUT (Device Under Test)
+full_adder UUT (
+    .a(a),
+    .b(b),
+    .c(c),
+    .sum(sum),
+    .carry(carry)
+);
+
+// Test stimulus
+initial begin
+    // Dump waveform
+    $dumpfile("start.vcd");
+    $dumpvars(0, full_adder_tb);
+    
+    // Monitor signals (FIXED)
+    $monitor("time=%0t, a=%b, b=%b, c=%b, sum=%b, carry=%b", 
+             $time, a, b, c, sum, carry);
+    
+    // Test all 8 combinations (FIXED - removed duplicates)
+    a=0; b=0; c=0; #10;
+    a=0; b=0; c=1; #10;
+    a=0; b=1; c=0; #10;
+    a=0; b=1; c=1; #10;
+    a=1; b=0; c=0; #10;
+    a=1; b=0; c=1; #10;
+    a=1; b=1; c=0; #10;
+    a=1; b=1; c=1; #10;
+    
+    // End simulation
+    $finish;
+end
+
+endmodule  // FIXED spelling
