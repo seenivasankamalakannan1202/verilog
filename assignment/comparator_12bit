@@ -1,0 +1,56 @@
+<===============================12bit_comparator==================================================>
+
+module comparator #(
+  parameter width=12)
+  
+  (input [11:0] a,b,
+   output reg a_lessthan_b,
+   				a_greaterthan_b,
+   					a_equal_to_b);
+  
+  assign a_lessthan_b= (a<b);
+  assign a_greaterthan_b =(a>b);
+  assign a_equal_to_b= (a==b);
+  
+endmodule
+
+<==================================test_bench=============================================>
+module comparator_tb;
+  
+  parameter width=12;
+  
+  reg [width-1:0] a,b;
+  wire get1,get2,get3;
+  
+  comparator uut(
+    .a(a),
+    .b(b),
+    .  a_lessthan_b( a_lessthan_b),
+    .a_greaterthan_b(a_greaterthan_b),
+    .a_equal_to_b(a_equal_to_b)
+   
+  );
+  
+  
+  initial begin
+    
+    $dumpfile("desk.vcd");
+    $dumpvars(0,comparator_tb);
+    
+    $monitor("| Time=%0t | a=%b  |  b=%b  |  a_lessthan_b=%b | a_greater_than_b=%b | a_equalto_b=%b |",$time,a,b,a_lessthan_b,
+   				a_greaterthan_b,
+   					a_equal_to_b);
+    $display("------------------------------------------------------------");
+    
+    
+     a=12'b0000000000101; b=12'b000000001010;
+     #10;
+     a=12'b010100010000; b=12'b000011110110;
+     #10;
+     a=12'b001101011111; b=12'b101111100000;
+     #10;
+     a=12'b000000000111; b=12'b010101010010;
+    #10;
+    $finish;
+  end
+endmodule
