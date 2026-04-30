@@ -1,0 +1,74 @@
+// 4-bit comparator//
+
+
+module comparator_4bit #(
+  parameter width = 4
+)(
+  input [width-1:0] a, b,
+  output reg get1, get2, get3
+);
+
+always @(*) begin
+    if (a > b) begin
+        get1 = 1;
+        get2 = 0;
+        get3 = 0;
+    end
+    
+    else if (a < b) begin
+        get1 = 0;
+        get2 = 1;
+        get3 = 0;
+    end
+    
+    else begin
+        get1 = 0;
+        get2 = 0;
+        get3 = 1;
+    end
+end
+
+endmodule
+      
+      
+      
+    <------------------------------------------------------------------TEST_BENCH-------------------------------------------------------------------->
+module comparator_4bit_tb;
+  
+  reg [3:0] a,b;
+  wire get1,get2,get3;
+  
+  comparator_4bit uut(
+    .a(a),
+    .b(b),
+    .get1(get1),
+    .get2(get2),
+    .get3(get3)
+  );
+  
+  
+  initial begin
+    
+    $dumpfile("desk.vcd");
+    $dumpvars(0,comparator_4bit_tb);
+    
+    $monitor("| Time=%0t | a=%b  |  b=%b  |  get1=%b | get2=%b | get3=%b |",$time,a,b,get1,get2,get3);
+    $display("------------------------------------------------------------");
+    
+    
+     a=4'b0000; b=4'b1010;
+     #10;
+     a=4'b0101; b=4'b0110;
+     #10;
+     a=4'b1111; b=4'b1110;
+     #10;
+     a=4'b0111; b=4'b0010;
+    #10;
+    $finish;
+  end
+endmodule
+
+
+
+       
+  					
