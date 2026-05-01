@@ -54,3 +54,80 @@ module comparator_tb;
     $finish;
   end
 endmodule
+
+<==================================================8-bitcomparator==================================================>
+
+module comparator #(
+  parameter width = 8
+)(
+  input  [width-1:0] a, b,
+  output reg a_grth_b,
+  output reg a_lsth_b,
+  output reg a_equ_b
+);
+
+always @(*) begin
+  case ({a > b, a < b})
+    
+    2'b10: begin
+      a_grth_b = 1;
+      a_lsth_b = 0;
+      a_equ_b  = 0;
+    end
+    
+    2'b01: begin
+      a_grth_b = 0;
+      a_lsth_b = 1;
+      a_equ_b  = 0;
+    end
+    
+    default: begin
+      a_grth_b = 0;
+      a_lsth_b = 0;
+      a_equ_b  = 1;
+    end
+
+  endcase
+end
+
+endmodule
+
+<=============================================test_bench================================================>
+// Code your design here
+module comparator_tb;
+
+parameter width = 8;
+
+reg  [width-1:0] a, b;
+wire a_grth_b, a_lsth_b, a_equ_b;
+
+// DUT (Device Under Test)
+comparator #(width) uut (
+  .a(a),
+  .b(b),
+  .a_grth_b(a_grth_b),
+  .a_lsth_b(a_lsth_b),
+  .a_equ_b(a_equ_b)
+);
+
+initial begin
+  
+  $dumpfile("comparator.vcd");
+  $dumpvars(0, comparator_tb);
+
+  // Test cases
+  a = 10; b = 5;   #10;  // A > B
+  a = 3;  b = 8;   #10;  // A < B
+  a = 7;  b = 7;   #10;  // A == B
+  a = 0;  b = 15;  #10;
+  a = 255; b = 1;  #10;
+
+  $finish;
+end
+
+initial begin
+  $monitor("Time=%0t | a=%d b=%d | GT=%b LT=%b EQ=%b",
+            $time, a, b, a_grth_b, a_lsth_b, a_equ_b);
+end
+
+endmodule
