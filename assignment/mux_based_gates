@@ -57,6 +57,69 @@ module and_muxtb;
 endmodule
 
 
+===============================================================================================================================================================================================
+
+      module or_mux(
+ 	input a,b,
+ 	input sel,
+   output  y);
+  
+   assign y=(~a)?b:1'b1;
+endmodule
+
+ <=============behavioural_type============================>
+
+module or_mux(
+  	input a,b,
+  	input sel,
+  output  reg y);
+  
+  always@(*) begin
+    if(a==1'b0 && b==1'b0)
+      begin
+        y=1'b0;
+      end
+    
+      else
+        begin
+        y=1'b1;
+    end
+  end
+endmodule
+
+==========================================================test_bench=========================================================
+module or_muxtb;
+  reg a,b,sel;
+  wire y;
+  
+  or_mux uut(
+    .a(a),
+    .b(b),
+    .sel(sel),
+    .y(y));
+  
+  initial begin
+    $dumpfile("star.vcd");
+    $dumpvars(0,or_muxtb);
+    
+    $monitor("time=%0t,a=%b,b=%b,sel=%b,y=%b",$time,a,b,sel,y);
+    
+     sel=1'b00;
+       a=0; b=0;
+     #10;
+     sel=1'b01;
+       a=0; b=1;
+     #10;
+     sel=1'b10;
+       a=1; b=0;
+     #10;
+     sel=1'b11;
+       a=1; b=1;
+    #10;
+     $finish;
+  end
+endmodule
+
 
 
 
