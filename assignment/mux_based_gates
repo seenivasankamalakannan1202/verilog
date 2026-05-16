@@ -119,6 +119,89 @@ module or_muxtb;
      $finish;
   end
 endmodule
+====================================================NOT_GATE=======================================
+
+module not_mux(
+                input sel,
+                output y);
+
+assign y=(sel) ? 2'b0:1'b1;
+endmodule
+==================================================TEST_BENCH========================================
+module not_muxtb;
+
+        reg sel;
+        wire y;
+
+
+ not_mux uut(
+
+                .sel(sel),
+                .y(y)
+);
+
+initial begin
+
+$dumpfile("frod.vcd");
+$dumpvars(0,not_muxtb);
+
+$monitor("| Time=%0t | sel=%b | y=%b |",$time,sel,y);
+$display("---------------------------------------------");
+
+
+       sel=1;
+
+#10
+        sel=0;
+#10
+    $finish;
+end
+endmodule
+=============================================NOR_GATE===========================================
+module nor_mux(
+                input i0,i1,
+                input sel,
+                output y
+                );
+
+assign y= sel?1'b0:~i1;
+endmodule
+=====================================================TEST_BENCH===================================
+module nor_muxtb;
+
+        reg i0,i1,sel;
+        wire y;
+
+
+ nor_mux uut(
+                .i0(i0),
+                .i1(i1),
+                .sel(sel),
+                .y(y)
+);
+
+initial begin
+
+$dumpfile("frog.vcd");
+$dumpvars(0,nor_muxtb);
+
+$monitor("| Time=%0t | i0 =%b | i1=%b | sel=%b | y=%b |",$time,i0,i1,sel,y);
+$display("---------------------------------------------");
+
+
+       sel=0; i0=0; i1=0;
+
+#10;
+        sel=0; i0=0; i1=1;
+#10;
+        sel=1; i0=1; i1=0;
+#10;
+        sel=1; i0=1; i1=1;
+#10;
+    $finish;
+end
+endmodule
+
 
 
 
