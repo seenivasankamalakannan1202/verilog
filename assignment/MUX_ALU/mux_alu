@@ -1,0 +1,133 @@
+module alu #(
+    parameter WIDTH = 4
+)(
+    input  [WIDTH-1:0] a,b,
+    input  [2:0] sel,
+    output reg [WIDTH-1:0] y,
+    output reg carry
+);
+
+always @(*) begin
+     y     = 0;
+    carry = 0;
+
+    case(sel)
+
+        
+        3'b000:
+        begin
+            {carry,y} = a + b;
+        end
+
+      
+        3'b001:
+        begin
+            {carry,y} = a - b;
+        end
+
+       
+        3'b010:
+        begin
+            y = a * b;
+        end
+
+       
+        3'b011:
+        begin
+            if(b != 0)
+                y = a / b;
+            else
+                y = 0;
+        end
+
+        
+        3'b100:
+        begin
+            y = a ^ b;
+        end
+
+        
+        3'b101:
+        begin
+            y = ~a;
+        end
+
+        3'b110:
+        begin
+            y = 0;
+            carry = 0;
+        end
+
+        default:
+        begin
+            y = 0;
+            carry = 0;
+        end
+
+    endcase
+end
+
+endmodule
+
+===================================================================================================================================
+module alu_tb;
+
+parameter WIDTH = 4;
+
+reg  [WIDTH-1:0] a,b;
+reg  [2:0] sel;
+
+wire [WIDTH-1:0] y;
+wire carry;
+
+// DUT Instantiation
+alu #(WIDTH) DUT (
+    .a(a),
+    .b(b),
+    .sel(sel),
+    .y(y),
+    .carry(carry)
+);
+
+initial begin
+
+    $display("--------------------------------------------------");
+    $display("| SEL |   A   |   B   | CARRY |   Y   |");
+    $display("--------------------------------------------------");
+
+    $monitor("| %3b | %4b | %4b |   %1b   | %4b |",
+              sel,a,b,carry,y);
+
+    // ADD
+    a = 4'b0101; b = 4'b0011; sel = 3'b000;
+    #10;
+
+    // SUB
+    a = 4'b1000; b = 4'b0010; sel = 3'b001;
+    #10;
+
+    // MUL
+    a = 4'b0011; b = 4'b0010; sel = 3'b010;
+    #10;
+
+    // DIV
+    a = 4'b1000; b = 4'b0010; sel = 3'b011;
+    #10;
+
+    // XOR
+    a = 4'b1100; b = 4'b1010; sel = 3'b100;
+    #10;
+
+    // NOT
+    a = 4'b1010; b = 4'b0000; sel = 3'b101;
+    #10;
+
+    // CLEAR
+    a = 4'b1111; b = 4'b1111; sel = 3'b110;
+    #10;
+
+    $finish;
+
+end
+
+endmodule
