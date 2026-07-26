@@ -297,4 +297,3 @@ module votingMachine(
 
 endmodule
 
-// https://github.com/seenivasankamalakannan1202/projects.git
