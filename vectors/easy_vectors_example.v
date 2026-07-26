@@ -9,7 +9,7 @@ module easy_vectors_example();
     assign c = a[3:2];
 
     initial begin
-        $monitor("proc2 a=%b b=%b c=%b d=%b", a, b, c, d);
+        $monitor("time=%0t a=%b b=%b c=%b d=%b", $time, a, b, c, d);
     end
 
     initial begin
@@ -25,7 +25,6 @@ module easy_vectors_example();
         #1 d[7:4] = b[6:3];
 
         #1 a = 8'b0000_1110;
-
         #1 d = {a[3:0], b[3:0]};
         #1 d = {b[3:0], a[7:4]};
     end
